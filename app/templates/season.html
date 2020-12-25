@@ -8,9 +8,11 @@
     <div class="col-sm">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Bunkerbowl</h5>
+          <h5 class="card-title">Bunkerbowl {{ season }}</h5>
           <p class="card-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            {% if season==3 %}
+            <a href="{{ text }}">En rapport från Bunkerbowl säsong {{ season }} finns här.</a>
+            {% endif %}
           </p>
         </div>
       </div>
@@ -20,8 +22,9 @@
   <!-- Spacer -->
   <div class="row"><div class="col-sm"><p></p></div></div>
 
+  {% if data %}
+
   <div class="row">
-    { % for game in data % }
     <div class="col-sm" style="text-align: center;">
       <div class="alert alert-success" role="alert">
         <b>Matcher</b>
@@ -29,44 +32,51 @@
       <div class="card-deck">
         <div class="card">
           <div class="card-body">
-            {% for game in data %}
-              {% if game.home != "" %}
-              {{ game.home }} - {{ game.away }}<br>
-              {% endif %}
-            {% endfor %}
-            </div>
+            <table class="table table-sm table-scroll sortable">
+
+              <thead>
+                <tr>
+                  <th scope="col" class="text-small">Match</th>
+                  <th scope="col" class="text-small">TD</th>
+                  <th scope="col" class="text-small">CAS</th>
+                  <th scope="col" class="text-small">type</th>
+                  <th scope="col" class="text-small">Gate</th>
+                  <th scope="col" class="text-small">Datum</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for game in data %}
+                {% if game.home != "" %}
+                <tr>
+                  <td class="text-small">
+                    {% if game['winner'] == game['home'] %}<b>{% endif %}
+                    {{ game['home'] }}
+                    {% if game['winner'] == game['home'] %}</b>{% endif %}
+                    -
+                    {% if game['winner'] == game['away'] %}<b>{% endif %}
+                    {{ game['away'] }}
+                    {% if game['winner'] == game['away'] %}</b>{% endif %}
+                  </td>
+                  <td class="text-small">{{ game['home TD'] }} - {{ game['away TD'] }}</td>
+                  <td class="text-small">{{ game['home CAS'] }} - {{ game['away CAS'] }}</td>
+                  <td class="text-small">{{ game['type'] }}</td>
+                  <td class="text-small">{{ game['Gate'] }}</td>
+                  <td class="text-small">{{ game['Datum'] }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-    { % endfor % }
   </div>
+
+  {% endif %}
 
   <!-- Spacer -->
-  <div class="row"><div class="col-sm"><p></p></div></div>
-
-  {% for skill in skills %}
-              <!-- <a data-toggle="collapse" href="#details-{{ skill.title | replace(' ', '-') }}" role="button" aria-expanded="false" aria-controls="details-{{ skill.title | replace(' ', '-') }}">
-                <img src="{{url_for('static', filename=skill.icon)}}" height=45 width=45 data-toggle="tooltip" data-placement="top" title="{{ skill.title }}"></a> -->
-  <div class="row">
-    <div class="col-sm collapse" id="details-{{ skill.title | replace(' ', '-') }}">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">
-            <a data-toggle="collapse" href="#details-{{ skill.title | replace(' ', '-') }}" role="button" aria-expanded="false" aria-controls="details-{{ skill.title | replace(' ', '-') }}">
-              {{ skill.title }}
-            </a>
-          </h5>
-          <p class="card-text"><img src="{{url_for('static', filename=skill.icon)}}" height=150></p>
-          {% for detailitems in skill.details %}
-            {% for key, text in detailitems.items() %}
-            <p class="card-text"><b>{{ key }}: </b>{{ text }}</p>
-            {% endfor %}
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
   <div class="row">
     <div class="col-sm"><p></p>
     </div>

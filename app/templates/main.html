@@ -10,17 +10,79 @@
         <div class="card-body">
           <h5 class="card-title">Bunkerbowl</h5>
           <p class="card-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Välkommen till Bunkerbowl, en liga i Lund där alla kan vara med för att det är roligt att slå på varandra.
           </p>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Spacer -->
+  <div class="row"><div class="col-sm"><p></p></div></div>
+
+  {% if data %}
+
   <div class="row">
-    <div class="col-sm"><p></p>
+    <div class="col-sm" style="text-align: center;">
+      <div class="alert alert-success" role="alert">
+        <b>Vinnare</b>
+      </div>
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-sm table-scroll sortable">
+
+              <thead>
+                <tr>
+                  <th scope="col" class="text-small">Säsong</th>
+                  <th scope="col" class="text-small">1:a</th>
+                  <th scope="col" class="text-small">2:a</th>
+                  <th scope="col" class="text-small">3:a</th>
+                  <th scope="col" class="text-small">4:a</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for season in data %}
+                <tr>
+                  <td class="text-small" style="vertical-align: middle;"><h3>{{ season['Namn'] }}</h3></td>
+                  {% if season['1st'] != "" %}
+                  <td class="text-small" style="vertical-align: middle;">
+                    <img src="{{ season['1st-link']}}" height=100><br>
+                    {{ season['1st'] }} ({{ season['1st-type']}})
+                  </td>
+                  <td class="text-small" style="vertical-align: middle;">
+                    <img src="{{ season['2nd-link']}}" height=100><br>
+                    {{ season['2nd'] }} ({{ season['2nd-type']}})
+                  </td>
+                  <td class="text-small" style="vertical-align: middle;">
+                    <img src="{{ season['3rd-link']}}" height=100><br>
+                    {{ season['3rd'] }} ({{ season['3rd-type']}})
+                  </td>
+                  <td class="text-small" style="vertical-align: middle;">
+                    <img src="{{ season['4th-link']}}" height=100><br>
+                    {{ season['4th'] }} ({{ season['4th-type']}})
+                  </td>
+                  {% else %}
+                  <td class="text-small" colspan=4 style="vertical-align: middle;">
+                    {{ season['text'] }}
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Spacer -->
+  <div class="row"><div class="col-sm"><p></p></div></div>
+
+  {% endif %}
+
 </div>
 
 {% endblock %}
