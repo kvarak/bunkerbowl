@@ -8,19 +8,44 @@
     <div class="col-sm">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Bunkerbowl</h5>
+          <h4 class="card-title">Regler</h4>
           <p class="card-text">
-            Välkommen till Bunkerbowl, en liga i Lund där alla kan vara med för att det är roligt att slå på varandra.
+            Dessa regler gäller från och med Bunkerbowl 7.
           </p>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Spacer -->
+  <div class="row"><div class="col-sm"><p></p></div></div>
+
+  {% if data %}
+
   <div class="row">
-    <div class="col-sm"><p></p>
+    <div class="col-sm">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">
+            <ol style="list-style-type: lower-roman;">
+              {% for rule in data %}
+              <li>
+                <b>{{ rule['grupp'] }} / {{ rule['titel'] }}</b><br>
+                {{ rule['regel'] }}
+              </li>
+              {% endfor %}
+            </ol>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Spacer -->
+  <div class="row"><div class="col-sm"><p></p></div></div>
+
+  {% endif %}
+
 </div>
 
 {% endblock %}

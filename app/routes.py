@@ -77,8 +77,88 @@ def season():
     data = gsheet.get_all_records()
     # print(data)
 
+    # team = name, matches, points, td, tdminus, cas, casminus
+
+    teams = {}
+
+    for d in data:
+        # print(d)
+        if d['winner'] != "":
+            if d['home'] in teams:
+                teams[d['home']]['matches'] += 1
+                teams[d['home']]['td'] += int(d['home TD'])
+                teams[d['home']]['tdminus'] += int(d['away TD'])
+                teams[d['home']]['tdtot'] += int(d['home TD'])
+                teams[d['home']]['tdtot'] -= int(d['away TD'])
+                teams[d['home']]['cas'] += int(d['home CAS'])
+                teams[d['home']]['casminus'] += int(d['away CAS'])
+                teams[d['home']]['castot'] += int(d['home CAS'])
+                teams[d['home']]['castot'] -= int(d['away CAS'])
+                if d['home'] == d['winner']:
+                    teams[d['home']]['points'] += 3
+                elif "<tie>" == d['winner']:
+                    teams[d['home']]['points'] += 1
+            else:
+                tmp = {}
+                tmp['name'] = d['home']
+                tmp['matches'] = 1
+                tmp['td'] = int(d['home TD'])
+                tmp['tdminus'] = int(d['away TD'])
+                tmp['tdtot'] = int(d['home TD']) - int(d['away TD'])
+                tmp['cas'] = int(d['home CAS'])
+                tmp['casminus'] = int(d['away CAS'])
+                tmp['castot'] = int(d['home CAS']) - int(d['away CAS'])
+                if d['home'] == d['winner']:
+                    tmp['points'] = 3
+                elif "<tie>" == d['winner']:
+                    tmp['points'] = 1
+                else:
+                    tmp['points'] = 0
+                # teams.append({d['home'] : tmp})
+                teams.update({d['home'] : tmp})
+            if d['away'] in teams:
+                teams[d['away']]['matches'] += 1
+                teams[d['away']]['td'] += int(d['away TD'])
+                teams[d['away']]['tdminus'] += int(d['home TD'])
+                teams[d['away']]['tdtot'] += int(d['away TD'])
+                teams[d['away']]['tdtot'] -= int(d['home TD'])
+                teams[d['away']]['cas'] += int(d['away CAS'])
+                teams[d['away']]['casminus'] += int(d['home CAS'])
+                teams[d['away']]['castot'] += int(d['away CAS'])
+                teams[d['away']]['castot'] -= int(d['home CAS'])
+                if d['away'] == d['winner']:
+                    teams[d['away']]['points'] += 3
+                elif "<tie>" == d['winner']:
+                    teams[d['away']]['points'] += 1
+            else:
+                tmp = {}
+                tmp['name'] = d['away']
+                tmp['matches'] = 1
+                tmp['td'] = int(d['away TD'])
+                tmp['tdminus'] = int(d['home TD'])
+                tmp['tdtot'] = int(d['away TD']) - int(d['home TD'])
+                tmp['cas'] = int(d['away CAS'])
+                tmp['casminus'] = int(d['home CAS'])
+                tmp['castot'] = int(d['away CAS']) - int(d['home CAS'])
+                if d['away'] == d['winner']:
+                    tmp['points'] = 3
+                elif "<tie>" == d['winner']:
+                    tmp['points'] = 1
+                else:
+                    tmp['points'] = 0
+                # teams.append({d['away'] : tmp})
+                teams.update({d['away'] : tmp})
+
+    print(teams)
+
+    sorted_teams = sorted(teams, key=lambda x: (teams[x]['points']), reverse=True)
+
+    print(sorted_teams)
+
     return render_template(
         'season.html',
+        sorted_teams=sorted_teams,
+        teams=teams,
         data=data,
         season=season)
 
@@ -88,8 +168,18 @@ def season():
 @app.route('/regler')
 def regler():
 
+    try:
+        gsheet = client.open_by_key(bunkerbowlhistory).worksheet("regler")
+    except:
+        return render_template(
+            'regler.html')
+
+    data = gsheet.get_all_records()
+
     return render_template(
-        'regler.html')
+        'regler.html',
+        data=data,
+        season=season)
 
 # --------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------

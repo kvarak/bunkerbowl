@@ -19,10 +19,55 @@
     </div>
   </div>
 
+  {% if sorted_teams %}
+
   <!-- Spacer -->
   <div class="row"><div class="col-sm"><p></p></div></div>
 
+  <div class="row">
+    <div class="col-sm" style="text-align: center;">
+      <div class="alert alert-success" role="alert">
+        <b>Tabell</b>
+      </div>
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-sm table-scroll sortable">
+
+              <thead>
+                <tr>
+                  <th scope="col" class="text-small">Namn</th>
+                  <th scope="col" class="text-small">Matcher</th>
+                  <th scope="col" class="text-small">Poäng</th>
+                  <th scope="col" class="text-small">TD</th>
+                  <th scope="col" class="text-small">CAS</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for team in sorted_teams %}
+                <tr>
+                  <td class="text-small">{{ teams[team].name }}</td>
+                  <td class="text-small">{{ teams[team].matches }}</td>
+                  <td class="text-small">{{ teams[team].points }}</td>
+                  <td class="text-small">{{ teams[team].tdtot }} ({{ teams[team].td }}-{{ teams[team].tdminus }})</td>
+                  <td class="text-small">{{ teams[team].castot }} ({{ teams[team].cas }}-{{ teams[team].casminus }})</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+
   {% if data %}
+
+  <!-- Spacer -->
+  <div class="row"><div class="col-sm"><p></p></div></div>
 
   <div class="row">
     <div class="col-sm" style="text-align: center;">
