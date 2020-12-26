@@ -105,7 +105,11 @@
 
                 {% for team in sorted_teams %}
                 <tr>
+                  {% if season >= 7 %}
                   <td class="text-small"><a href="/team?s={{season}}&team={{ teams[team].name }}">{{ teams[team].name }}</a></td>
+                  {% else %}
+                  <td class="text-small">{{ teams[team].name }}</td>
+                  {% endif %}
                   <td class="text-small">{{ teams[team].matches }}</td>
                   <td class="text-small">{{ teams[team].points }}</td>
                   <td class="text-small">{{ teams[team].tdtot }} ({{ teams[team].td }}-{{ teams[team].tdminus }})</td>

@@ -10,9 +10,22 @@
         <div class="card-body">
           <h5 class="card-title">{{ team }}</h5>
           <p class="card-text">
-            Säsong {{ season }}
+            Säsong {{ season }}<br>
           </p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spacer -->
+  <div class="row"><div class="col-sm"><p></p></div></div>
+
+  {% if teamdata %}
+
+  <div class="row">
+    <div class="col-sm" style="text-align: center;">
+      <div class="alert alert-success" role="alert">
+        <b>Laget</b>
       </div>
     </div>
   </div>
@@ -23,9 +36,134 @@
 
   <div class="row">
 
+    <div class="col-sm">
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-body" class="text-small">
+            <table class="table table-sm">
+              <tr>
+                <td class="text-small">Spelbara spelare</td>
+                <td class="text-small">{{ teamdata['spelbara'] }}</td>
+                <td class="text-small" style="width: 80%">
+                  <div class="progress" style="height: 13px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ teamdata['spelbara'] / 16 * 100 }}%" aria-valuenow="{{ teamdata['spelbara'] / 16 * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-small">Dedicated Fans</td>
+                <td class="text-small">{{ teamdata['dedicatedfans'] }}</td>
+                <td class="text-small" style="width: 80%">
+                  <div class="progress" style="height: 13px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ teamdata['dedicatedfans'] / 7 * 100 }}%" aria-valuenow="{{ teamdata['dedicatedfans'] / 7 * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-small">Re-rolls</td>
+                <td class="text-small">{{ teamdata['rerolls'] }}</td>
+                <td class="text-small" style="width: 80%">
+                  <div class="progress" style="height: 13px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ teamdata['rerolls'] / 8 * 100 }}%" aria-valuenow="{{ teamdata['rerolls'] / 8 * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-small">cheerleaders</td>
+                <td class="text-small">{{ teamdata['cheerleaders'] }}</td>
+                <td class="text-small" style="width: 80%">
+                  <div class="progress" style="height: 13px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ teamdata['cheerleaders'] / 12 * 100 }}%" aria-valuenow="{{ teamdata['cheerleaders'] / 12 * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-small">assistantcoaches</td>
+                <td class="text-small">{{ teamdata['assistantcoaches'] }}</td>
+                <td class="text-small" style="width: 80%">
+                  <div class="progress" style="height: 13px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ teamdata['assistantcoaches'] / 6 * 100 }}%" aria-valuenow="{{ teamdata['assistantcoaches'] / 6 * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-small">apothecaries</td>
+                <td class="text-small">{{ teamdata['apothecaries'] }}</td>
+                <td class="text-small" style="width: 80%">
+                  <div class="progress" style="height: 13px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ teamdata['apothecaries'] / 1 * 100 }}%" aria-valuenow="{{ teamdata['apothecaries'] / 1 * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm" style="text-align: center;">
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+            <img src="{{ teamdata['logo'] }}" height="160">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-sm">
+              <tr>
+                <td class="text-small">Team</td>
+                <td class="text-small">{{ teamdata['team'] }}</td>
+              </tr>
+              <tr>
+                <td class="text-small">Hemvist</td>
+                <td class="text-small">{{ teamdata['place'] }}</td>
+              </tr>
+              <tr>
+                <td class="text-small">Hempitch</td>
+                <td class="text-small">{{ teamdata['pitch'] }}</td>
+              </tr>
+              <tr>
+                <td class="text-small">Coach</td>
+                <td class="text-small">{{ teamdata['owner'] }}</td>
+              </tr>
+              <tr>
+                <td class="text-small">Treasury</td>
+                <td class="text-small">{{ teamdata['treasury'] }}</td>
+              </tr>
+              <tr>
+                <td class="text-small">Team Value</td>
+                <td class="text-small">{{ teamdata['tv'] }}</td>
+              </tr>
+              <tr>
+                <td class="text-small">Current Team Value</td>
+                <td class="text-small">{{ teamdata['ctv'] }}</td>
+              </tr>
+              <tr>
+                <td class="text-small">Totalt Star Player Points</td>
+                <td class="text-small">{{ teamdata['spp'] }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Spacer -->
+  <div class="row"><div class="col-sm"><p></p></div></div>
+
+  <div class="row">
+
     <div class="col-sm" style="text-align: center;">
       <div class="alert alert-success" role="alert">
-        <b>Spelare</b>
+        <b>Spelarna</b>
       </div>
       <div class="card-deck">
         <div class="card">
@@ -105,6 +243,17 @@
       </div>
     </div>
   </div>
+
+  {% else %}
+  <div class="row">
+    <div class="col-sm" style="text-align: center;">
+      <div class="alert alert-warning" role="alert">
+        Error! Kan inte hitta fliken med namnet "{{ team }}" i google sheets dokumentet.
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
 
 </div>
 

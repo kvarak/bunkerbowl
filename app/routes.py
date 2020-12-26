@@ -282,10 +282,51 @@ def team():
                 }
             players.update({row['Nr'] : tmp})
 
-    print(players)
+    teamdata = {}
+
+    for row in teamdetails:
+        if row['Name'] == "Team":
+            teamdata.update({'team': row['Position']})
+        elif row['Name'] == "Ägare":
+            teamdata.update({'owner': row['Position']})
+        elif row['Name'] == "Name":
+            teamdata.update({'name': row['Position']})
+        elif row['Name'] == "Hemmaplats":
+            teamdata.update({'place': row['Position']})
+        elif row['Name'] == "Hemmapitch":
+            teamdata.update({'pitch': row['Position']})
+        elif row['Name'] == "Special Rules":
+            teamdata.update({'rules': row['Position']})
+        elif row['Name'] == "ShortName":
+            teamdata.update({'shortname': row['Position']})
+        elif row['Name'] == "Re-rolls":
+            teamdata.update({'rerolls': row['MA']})
+        elif row['Name'] == "Dedicated Fans":
+            teamdata.update({'dedicatedfans': row['MA']})
+        elif row['Name'] == "Cheerleaders":
+            teamdata.update({'cheerleaders': row['MA']})
+        elif row['Name'] == "Assistant Coaches":
+            teamdata.update({'assistantcoaches': row['MA']})
+        elif row['Name'] == "Apothecaries":
+            teamdata.update({'apothecaries': row['MA']})
+        elif row['Name'] == "Treasury":
+            teamdata.update({'treasury': row['Position']})
+        elif row['Name'] == "Team Value (TV)":
+            teamdata.update({'tv': row['Position']})
+        elif row['Name'] == "Current Team Value (CTV)":
+            teamdata.update({'ctv': row['Position']})
+        elif row['Name'] == "Link to logo":
+            teamdata.update({'logo': row['Position']})
+        elif row['Name'] == "Summa SPP":
+            teamdata.update({'spp': row['Position']})
+        elif row['Name'] == "Antal spelbara spelare":
+            teamdata.update({'spelbara': row['Position']})
+
+    print(teamdata)
 
     return render_template(
         'team.html',
+        teamdata=teamdata,
         team=team,
         season=season,
         players=players)
