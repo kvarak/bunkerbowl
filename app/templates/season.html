@@ -12,6 +12,12 @@
           <p class="card-text">
             {% if season==3 %}
             <a href="{{ text }}">En rapport från Bunkerbowl säsong {{ season }} finns här.</a>
+            {% elif season==6 %}
+            Denna säsong startades {{ start }}, men fick lov att avbrytas pga Covid-19 pandemin.
+            {% elif season==currentseason %}
+            Denna säsong startades {{ start }} och är den nuvarande säsongen.
+            {% elif start %}
+            Säsongen pågick mellan {{ start }} och {{ end }}.
             {% endif %}
           </p>
         </div>
@@ -19,13 +25,65 @@
     </div>
   </div>
 
-  {% if sorted_teams %}
-
   <!-- Spacer -->
   <div class="row"><div class="col-sm"><p></p></div></div>
 
   <div class="row">
+
+
     <div class="col-sm" style="text-align: center;">
+
+
+      <div class="alert alert-success" role="alert">
+        <b>Slutspel</b>
+      </div>
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-sm table-scroll sortable">
+
+              <thead>
+                <tr>
+                  <th scope="col" class="text-small">Match</th>
+                  <th scope="col" class="text-small">TD</th>
+                  <th scope="col" class="text-small">CAS</th>
+                  <th scope="col" class="text-small">type</th>
+                  <th scope="col" class="text-small">Gate</th>
+                  <th scope="col" class="text-small">Datum</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for m in slutspel %}
+                {% for game in data %}
+                {% if game.type == m %}
+                <tr>
+                  <td class="text-small">
+                    {% if game['winner'] == game['home'] %}<b>{% endif %}
+                    {{ game['home'] }}
+                    {% if game['winner'] == game['home'] %}</b>{% endif %}
+                    -
+                    {% if game['winner'] == game['away'] %}<b>{% endif %}
+                    {{ game['away'] }}
+                    {% if game['winner'] == game['away'] %}</b>{% endif %}
+                  </td>
+                  <td class="text-small">{{ game['home TD'] }} - {{ game['away TD'] }}</td>
+                  <td class="text-small">{{ game['home CAS'] }} - {{ game['away CAS'] }}</td>
+                  <td class="text-small">{{ game['type'] }}</td>
+                  <td class="text-small">{{ game['Gate'] }}</td>
+                  <td class="text-small">{{ game['Datum'] }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p></p>
+
       <div class="alert alert-success" role="alert">
         <b>Tabell</b>
       </div>
@@ -59,17 +117,13 @@
           </div>
         </div>
       </div>
+
+
+
     </div>
-  </div>
 
-  {% endif %}
 
-  {% if data %}
 
-  <!-- Spacer -->
-  <div class="row"><div class="col-sm"><p></p></div></div>
-
-  <div class="row">
     <div class="col-sm" style="text-align: center;">
       <div class="alert alert-success" role="alert">
         <b>Matcher</b>
@@ -93,6 +147,7 @@
 
                 {% for game in data %}
                 {% if game.home != "" %}
+                {% if game.type != "final" and game.type != "semifinal" and game.type != "bronsmatch" %}
                 <tr>
                   <td class="text-small">
                     {% if game['winner'] == game['home'] %}<b>{% endif %}
@@ -110,6 +165,7 @@
                   <td class="text-small">{{ game['Datum'] }}</td>
                 </tr>
                 {% endif %}
+                {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
@@ -118,8 +174,6 @@
       </div>
     </div>
   </div>
-
-  {% endif %}
 
   <!-- Spacer -->
   <div class="row">

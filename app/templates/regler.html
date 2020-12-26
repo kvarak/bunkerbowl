@@ -28,11 +28,19 @@
         <div class="card-body">
           <p class="card-text">
             <ol style="list-style-type: lower-roman;">
-              {% for rule in data %}
+              {% for g in groups %}
               <li>
-                <b>{{ rule['grupp'] }} / {{ rule['titel'] }}</b><br>
-                {{ rule['regel'] }}
-              </li>
+                <h5>{{ g }}</h5>
+                <ol>
+                  {% for rule in data %}
+                  {% if rule['grupp'] == g %}
+                  <li>
+                    <b>{{ rule['titel'] }}</b>: {{ rule['regel'] }}
+                  </li>
+                  {% endif %}
+                  {% endfor %}
+                </li>
+              </ol>
               {% endfor %}
             </ol>
           </p>

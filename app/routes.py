@@ -32,6 +32,24 @@ bunkerbowlsheet[1] = "1c_ksQ5azUB0YsW2u_uait0Aty4crIR6qy1dSMVXoxSU"
 
 bunkerbowlhistory = "1WKhsUERByCLcnOqSHWgJimNav7wY-QNvtCATINZzYIg"
 
+currentseason = 7
+
+# --------------------------------------------------------------------------------
+# Help functions
+# --------------------------------------------------------------------------------
+
+def unique(list1):
+
+    # intilize a null list
+    unique_list = []
+
+    # traverse for all elements
+    for x in list1:
+        # check if exists in unique_list or not
+        if x not in unique_list:
+            unique_list.append(x)
+
+    return(unique_list)
 
 # --------------------------------------------------------------------------------
 # Route functions
@@ -75,15 +93,12 @@ def season():
             season=season)
 
     data = gsheet.get_all_records()
-    # print(data)
-
-    # team = name, matches, points, td, tdminus, cas, casminus
 
     teams = {}
 
     for d in data:
         # print(d)
-        if d['winner'] != "":
+        if d['winner'] != "" and d['type'] == "league":
             if d['home'] in teams:
                 teams[d['home']]['matches'] += 1
                 teams[d['home']]['td'] += int(d['home TD'])
@@ -114,7 +129,6 @@ def season():
                     tmp['points'] = 1
                 else:
                     tmp['points'] = 0
-                # teams.append({d['home'] : tmp})
                 teams.update({d['home'] : tmp})
             if d['away'] in teams:
                 teams[d['away']]['matches'] += 1
@@ -146,19 +160,36 @@ def season():
                     tmp['points'] = 1
                 else:
                     tmp['points'] = 0
-                # teams.append({d['away'] : tmp})
                 teams.update({d['away'] : tmp})
 
-    print(teams)
 
-    sorted_teams = sorted(teams, key=lambda x: (teams[x]['points']), reverse=True)
+    sort_order = ['matches', 'castot', 'tdtot', 'points']
 
-    print(sorted_teams)
+    teamstosort = teams
+    for sortx in sort_order:
+        sorted_teams = sorted(teamstosort, key=lambda x: (teamstosort[x][sortx]), reverse=True)
+        newteams = {}
+        for t in sorted_teams:
+            newteams.update({t : teams[t]})
+        teamstosort = newteams
+
+    matchtype = ['final', 'bronsmatch', 'semifinal', 'league', 'jumbo', 'friendly']
+    slutspel = ['final', 'bronsmatch', 'semifinal']
+
+    dates = []
+    for d in data:
+        if d['Datum'] != "" and d['Datum'] != "#REF!":
+            dates.append(d['Datum'])
 
     return render_template(
         'season.html',
+        currentseason=currentseason,
+        start=(min(dates)),
+        end=(max(dates)),
         sorted_teams=sorted_teams,
         teams=teams,
+        matchtype=matchtype,
+        slutspel=slutspel,
         data=data,
         season=season)
 
@@ -176,9 +207,16 @@ def regler():
 
     data = gsheet.get_all_records()
 
+    groups = []
+    for d in data:
+        if d['grupp'] != "":
+            groups.append(d['grupp'])
+    unique_groups = unique(groups)
+
     return render_template(
         'regler.html',
         data=data,
+        groups=unique_groups,
         season=season)
 
 # --------------------------------------------------------------------------------
