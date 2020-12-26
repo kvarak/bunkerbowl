@@ -105,7 +105,7 @@
 
                 {% for team in sorted_teams %}
                 <tr>
-                  <td class="text-small">{{ teams[team].name }}</td>
+                  <td class="text-small"><a href="/team?s={{season}}&team={{ teams[team].name }}">{{ teams[team].name }}</a></td>
                   <td class="text-small">{{ teams[team].matches }}</td>
                   <td class="text-small">{{ teams[team].points }}</td>
                   <td class="text-small">{{ teams[team].tdtot }} ({{ teams[team].td }}-{{ teams[team].tdminus }})</td>

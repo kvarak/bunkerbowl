@@ -8,69 +8,104 @@
     <div class="col-sm">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Bunkerbowl</h5>
+          <h5 class="card-title">{{ team }}</h5>
           <p class="card-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Säsong {{ season }}
           </p>
         </div>
       </div>
     </div>
   </div>
 
+
   <!-- Spacer -->
   <div class="row"><div class="col-sm"><p></p></div></div>
 
   <div class="row">
-    { % for game in data % }
+
     <div class="col-sm" style="text-align: center;">
       <div class="alert alert-success" role="alert">
-        <b>Matcher</b>
+        <b>Spelare</b>
       </div>
       <div class="card-deck">
         <div class="card">
           <div class="card-body">
-            {% for game in data %}
-              {% if game.home != "" %}
-              {{ game.home }} - {{ game.away }}<br>
-              {% endif %}
-            {% endfor %}
-            </div>
+            <table class="table table-sm table-scroll sortable">
+
+              <thead>
+                <tr>
+                  <th scope="col" class="text-small">Nr</th>
+                  <th scope="col" class="text-small" style="text-align: left;">Namn</th>
+                  <th scope="col" class="text-small" style="text-align: left;">Position</th>
+                  <th scope="col" class="text-small">MA</th>
+                  <th scope="col" class="text-small">ST</th>
+                  <th scope="col" class="text-small">AG</th>
+                  <th scope="col" class="text-small">PA</th>
+                  <th scope="col" class="text-small">AV</th>
+                  <th scope="col" class="text-small" style="text-align: left;">Skills & Traits</th>
+                  <th scope="col" class="text-small">Comp</th>
+                  <th scope="col" class="text-small">Defl</th>
+                  <th scope="col" class="text-small">Int</th>
+                  <th scope="col" class="text-small">CAS</th>
+                  <th scope="col" class="text-small">TD</th>
+                  <th scope="col" class="text-small">MVP</th>
+                  <th scope="col" class="text-small">SPP</th>
+                  <th scope="col" class="text-small">Value</th>
+                  <th scope="col" class="text-small" style="text-align: left;">Status</th>
+                  <th scope="col" class="text-small" style="text-align: left;">Special</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for player in players %}
+                {% if players[player]['MNG'] != "" or players[player]['TR'] != "" %}
+                <tr style="background-color: rgb(211, 205, 205);">
+                {% else %}
+                <tr>
+                {% endif %}
+                  <td class="text-small">{{ players[player]['Nr'] }}</td>
+                  <td class="text-small" style="text-align: left;">{{ players[player]['Name'] }}</td>
+                  <td class="text-small" style="text-align: left;">{{ players[player]['Position'] }}</td>
+                  <td class="text-small">{{ players[player]['MA'] }}</td>
+                  <td class="text-small">{{ players[player]['ST'] }}</td>
+                  <td class="text-small">{{ players[player]['AG'] }}</td>
+                  <td class="text-small">{{ players[player]['PA'] }}</td>
+                  <td class="text-small">{{ players[player]['AV'] }}</td>
+                  <td class="text-small" style="text-align: left;">{{ players[player]['Skills'] }}</td>
+                  <td class="text-small">{{ players[player]['COMP'] }}</td>
+                  <td class="text-small">{{ players[player]['DEFL'] }}</td>
+                  <td class="text-small">{{ players[player]['INT'] }}</td>
+                  <td class="text-small">{{ players[player]['CAS'] }}</td>
+                  <td class="text-small">{{ players[player]['TD'] }}</td>
+                  <td class="text-small">{{ players[player]['MVP'] }}</td>
+                  <td class="text-small">{{ players[player]['SPP'] }}/{{ players[player]['SPPearned'] }}</td>
+                  <td class="text-small">{{ players[player]['Value'] }}</td>
+                  <td class="text-small" style="text-align: left;">
+                    {% if players[player]['MNG'] != "" %}
+                    <img src="{{url_for('static', filename='ico-mng.png')}}" height="15" data-toggle="tooltip" data-placement="top" title="Miss Next Game">
+                    {% endif %}
+                    {% if players[player]['TR'] != "" %}
+                    <img src="{{url_for('static', filename='ico-tr.png')}}" height="15" data-toggle="tooltip" data-placement="top" title="Temporarily Retired Player">
+                    {% endif %}
+                    {% if players[player]['Nigg'] != "" %}
+                    {% set niggling = players[player]['Nigg'] | int %}
+                    {% for a in range(niggling) %}
+                    <img src="{{url_for('static', filename='ico-niggling.png')}}" height="15" data-toggle="tooltip" data-placement="top" title="Niggling Injury">
+                    {% endfor %}
+                    {% endif %}
+                  </td>
+                  <td class="text-small" style="text-align: left;">{{ players[player]['Special'] }}</td>
+                </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-    { % endfor % }
   </div>
 
-  <!-- Spacer -->
-  <div class="row"><div class="col-sm"><p></p></div></div>
-
-  {% for skill in skills %}
-              <!-- <a data-toggle="collapse" href="#details-{{ skill.title | replace(' ', '-') }}" role="button" aria-expanded="false" aria-controls="details-{{ skill.title | replace(' ', '-') }}">
-                <img src="{{url_for('static', filename=skill.icon)}}" height=45 width=45 data-toggle="tooltip" data-placement="top" title="{{ skill.title }}"></a> -->
-  <div class="row">
-    <div class="col-sm collapse" id="details-{{ skill.title | replace(' ', '-') }}">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">
-            <a data-toggle="collapse" href="#details-{{ skill.title | replace(' ', '-') }}" role="button" aria-expanded="false" aria-controls="details-{{ skill.title | replace(' ', '-') }}">
-              {{ skill.title }}
-            </a>
-          </h5>
-          <p class="card-text"><img src="{{url_for('static', filename=skill.icon)}}" height=150></p>
-          {% for detailitems in skill.details %}
-            {% for key, text in detailitems.items() %}
-            <p class="card-text"><b>{{ key }}: </b>{{ text }}</p>
-            {% endfor %}
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-  <div class="row">
-    <div class="col-sm"><p></p>
-    </div>
-  </div>
 </div>
 
 {% endblock %}

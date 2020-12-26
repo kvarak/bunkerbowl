@@ -80,6 +80,10 @@ def season():
 
     season = int(request.values.get('s'))
 
+    # -------------------
+    # Get the matches
+    # -------------------
+
     try:
         gsheet = client.open_by_key(bunkerbowlsheet[season]).worksheet("games")
     except:
@@ -97,73 +101,65 @@ def season():
     teams = {}
 
     for d in data:
-        # print(d)
-        if d['winner'] != "" and d['type'] == "league":
-            if d['home'] in teams:
-                teams[d['home']]['matches'] += 1
-                teams[d['home']]['td'] += int(d['home TD'])
-                teams[d['home']]['tdminus'] += int(d['away TD'])
-                teams[d['home']]['tdtot'] += int(d['home TD'])
-                teams[d['home']]['tdtot'] -= int(d['away TD'])
-                teams[d['home']]['cas'] += int(d['home CAS'])
-                teams[d['home']]['casminus'] += int(d['away CAS'])
-                teams[d['home']]['castot'] += int(d['home CAS'])
-                teams[d['home']]['castot'] -= int(d['away CAS'])
-                if d['home'] == d['winner']:
-                    teams[d['home']]['points'] += 3
-                elif "<tie>" == d['winner']:
-                    teams[d['home']]['points'] += 1
-            else:
+        if d['type'] == "league":
+            if d['home'] not in teams:
                 tmp = {}
                 tmp['name'] = d['home']
-                tmp['matches'] = 1
-                tmp['td'] = int(d['home TD'])
-                tmp['tdminus'] = int(d['away TD'])
-                tmp['tdtot'] = int(d['home TD']) - int(d['away TD'])
-                tmp['cas'] = int(d['home CAS'])
-                tmp['casminus'] = int(d['away CAS'])
-                tmp['castot'] = int(d['home CAS']) - int(d['away CAS'])
-                if d['home'] == d['winner']:
-                    tmp['points'] = 3
-                elif "<tie>" == d['winner']:
-                    tmp['points'] = 1
-                else:
-                    tmp['points'] = 0
+                tmp['matches'] = 0
+                tmp['td'] = 0
+                tmp['tdminus'] = 0
+                tmp['tdtot'] = 0
+                tmp['cas'] = 0
+                tmp['casminus'] = 0
+                tmp['castot'] = 0
+                tmp['points'] = 0
                 teams.update({d['home'] : tmp})
-            if d['away'] in teams:
-                teams[d['away']]['matches'] += 1
-                teams[d['away']]['td'] += int(d['away TD'])
-                teams[d['away']]['tdminus'] += int(d['home TD'])
-                teams[d['away']]['tdtot'] += int(d['away TD'])
-                teams[d['away']]['tdtot'] -= int(d['home TD'])
-                teams[d['away']]['cas'] += int(d['away CAS'])
-                teams[d['away']]['casminus'] += int(d['home CAS'])
-                teams[d['away']]['castot'] += int(d['away CAS'])
-                teams[d['away']]['castot'] -= int(d['home CAS'])
-                if d['away'] == d['winner']:
-                    teams[d['away']]['points'] += 3
-                elif "<tie>" == d['winner']:
-                    teams[d['away']]['points'] += 1
-            else:
+            if d['away'] not in teams:
                 tmp = {}
                 tmp['name'] = d['away']
-                tmp['matches'] = 1
-                tmp['td'] = int(d['away TD'])
-                tmp['tdminus'] = int(d['home TD'])
-                tmp['tdtot'] = int(d['away TD']) - int(d['home TD'])
-                tmp['cas'] = int(d['away CAS'])
-                tmp['casminus'] = int(d['home CAS'])
-                tmp['castot'] = int(d['away CAS']) - int(d['home CAS'])
-                if d['away'] == d['winner']:
-                    tmp['points'] = 3
-                elif "<tie>" == d['winner']:
-                    tmp['points'] = 1
-                else:
-                    tmp['points'] = 0
+                tmp['matches'] = 0
+                tmp['td'] = 0
+                tmp['tdminus'] = 0
+                tmp['tdtot'] = 0
+                tmp['cas'] = 0
+                tmp['casminus'] = 0
+                tmp['castot'] = 0
+                tmp['points'] = 0
                 teams.update({d['away'] : tmp})
 
+    for d in data:
+        if d['winner'] != "" and d['type'] == "league":
 
-    sort_order = ['matches', 'castot', 'tdtot', 'points']
+            teams[d['home']]['matches'] += 1
+            teams[d['home']]['td'] += int(d['home TD'])
+            teams[d['home']]['tdminus'] += int(d['away TD'])
+            teams[d['home']]['tdtot'] += int(d['home TD'])
+            teams[d['home']]['tdtot'] -= int(d['away TD'])
+            teams[d['home']]['cas'] += int(d['home CAS'])
+            teams[d['home']]['casminus'] += int(d['away CAS'])
+            teams[d['home']]['castot'] += int(d['home CAS'])
+            teams[d['home']]['castot'] -= int(d['away CAS'])
+            if d['home'] == d['winner']:
+                teams[d['home']]['points'] += 3
+            elif "<tie>" == d['winner']:
+                teams[d['home']]['points'] += 1
+
+            teams[d['away']]['matches'] += 1
+            teams[d['away']]['td'] += int(d['away TD'])
+            teams[d['away']]['tdminus'] += int(d['home TD'])
+            teams[d['away']]['tdtot'] += int(d['away TD'])
+            teams[d['away']]['tdtot'] -= int(d['home TD'])
+            teams[d['away']]['cas'] += int(d['away CAS'])
+            teams[d['away']]['casminus'] += int(d['home CAS'])
+            teams[d['away']]['castot'] += int(d['away CAS'])
+            teams[d['away']]['castot'] -= int(d['home CAS'])
+            if d['away'] == d['winner']:
+                teams[d['away']]['points'] += 3
+            elif "<tie>" == d['winner']:
+                teams[d['away']]['points'] += 1
+
+
+    sort_order = ['name', 'matches', 'castot', 'tdtot', 'points']
 
     teamstosort = teams
     for sortx in sort_order:
@@ -231,10 +227,67 @@ def statistik():
 # --------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------
 
-@app.route('/team')
+@app.route('/team', methods=['GET', 'POST'])
 def team():
 
+    season = int(request.values.get('s'))
+    team = request.values.get('team')
+    print(team)
+
+    # Get the team
+
+    try:
+        gsheet = client.open_by_key(bunkerbowlsheet[season]).worksheet(team)
+        print("success for " + team + " season " + str(season))
+        teamdetails = gsheet.get_all_records()
+
+    except:
+        print("failed for " + team + " season " + str(season))
+        return render_template(
+            'team.html',
+            team=team,
+            season=season)
+
+    players = {}
+    # Players roster
+    for row in teamdetails:
+        if row['Nr'] != "" and row['Position'] != "":
+            tmp = {
+                'Nr': row['Nr'],
+                'Name': row['Name'],
+                'Position': row['Position'],
+                'MA': row['MA'],
+                'ST': row['ST'],
+                'AG': row['AG'],
+                'PA': row['PA'],
+                'AV': row['AV'],
+                'Skills': row['Skills & Traits'],
+                'COMP': row['COMP'],
+                'DEFL': row['DEFL'],
+                'INT': row['INT'],
+                'CAS': row['CAS'],
+                'TD': row['TD'],
+                'MVP': row['MVP'],
+                'SPPearned': row['SPP\nEARNED'],
+                'SPPspent': row['SPP\nSPENT'],
+                'SPP': row['SPP'],
+                'BaseCost': row['Base Cost'],
+                'ValueIncrease': row['Value increase'],
+                'Value': row['Value'],
+                'MNG': row['MNG'],
+                'TR': row['TR'],
+                'CurrentValue': row['Current Value'],
+                'Nigg': row['Nigg'],
+                'Special': row['Special']
+                }
+            players.update({row['Nr'] : tmp})
+
+    print(players)
+
     return render_template(
-        'team.html')
+        'team.html',
+        team=team,
+        season=season,
+        players=players)
 
 # --------------------------------------------------------------------------------
